@@ -35,7 +35,7 @@ P4_SCHOOLS = {
     "Virginia", "Virginia Tech", "Wake Forest", "Notre Dame", "Arizona",
     "Arizona State", "Baylor", "BYU", "Cincinnati", "Colorado", "Houston",
     "Iowa State", "Kansas", "Kansas State", "Oklahoma State", "TCU",
-    "Texas Tech", "UCF", "Utah", "West Virginia"
+    "Texas Tech", "UCF", "Utah", "West Virginia", "Oregon State"
 }
 
 G5_SCHOOLS = {

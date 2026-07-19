@@ -1,6 +1,7 @@
 scraper_log.txt
 local_log_parser.py
 debug_logs/
+outut_excels/
 .venv
 __pycache__
 g6_research_data.xlsx
