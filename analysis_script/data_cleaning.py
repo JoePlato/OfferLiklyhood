@@ -183,7 +183,7 @@ df = pd.read_excel("g6_research_data_cleaned.xlsx")
 # df = df[df["Last_Commit"] != "Unknown"]
 # df = df[df["Last_Commit"] != "Uncommitted"]
 
-df2 = df.copy()
+# df2 = df.copy()
 
 # df2.insert(loc=17, column='Committed In-state', value=0)
 
@@ -192,7 +192,10 @@ df2 = df.copy()
 # # # 2. Compare the new Series of school states to the student's state column
 # df2.loc[school_states == df["State"], "Committed In-state"] = 1
 
+df.insert(loc=19, column='P4 Commit', value=0)
+last_commit = df["Last_Commit"].isin(P4_SCHOOLS)
 
+df.loc[last_commit, "P4 Commit"] = 1
 
 # #2. Seperating the states and hometown in the main
 # # split_data = df["Hometown"].str.split(", ", expand=True)
@@ -202,22 +205,21 @@ df2 = df.copy()
 # # df.insert(loc=3, column='State', value=split_data[1])
 
 # #3. Filtering out schools that had 0 flips
-df2 = df2[df2["Flip_Count"] > 0]
+# df2 = df2[df2["Flip_Count"] > 0]
 
-df2.insert(loc=17, column='P4_Flips', value=0)
+# df2.insert(loc=17, column='P4_Flips', value=0)
 
 # #4. Getting the school the flipped from the most recently
-first_school_flipped = df2["Flipped_From"].str.split(",").str[0].str.strip()
+# first_school_flipped = df2["Flipped_From"].str.split(",").str[0].str.strip()
 
-is_first_p4 = first_school_flipped.isin(P4_SCHOOLS)
-is_last_g6 = df2["Last_Commit"].isin(G5_SCHOOLS)
+# is_first_p4 = first_school_flipped.isin(P4_SCHOOLS)
+# is_last_g6 = df2["Last_Commit"].isin(G5_SCHOOLS)
 
-df2.loc[is_first_p4 & is_last_g6, "P4_Flips"] = 1
+# df2.loc[is_first_p4 & is_last_g6, "P4_Flips"] = 1
 
-
-# # print(filtered_df.shape)
-df2.to_excel("Flipped_Schools.xlsx", index = False)
+# print(filtered_df.shape)
+# df2.to_excel("Flipped_Schools.xlsx", index = False)
 #4. Getting the number of times people switched from a p4 school to a G6 School
 
 #5.Saving the excel file 
-# df.to_excel("g6_research_data_cleaned.xlsx")
+df.to_excel("g6_research_data_cleaned.xlsx", index=False)

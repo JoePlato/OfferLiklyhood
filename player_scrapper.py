@@ -14,8 +14,8 @@ from tqdm.asyncio import tqdm_asyncio
 # --- CONFIGURATION ---
 START_YEAR = 2017
 END_YEAR = 2027
-CONCURRENT_LIMIT = 15
-OUTPUT_FILE = "g6_research_data.xlsx"
+CONCURRENT_LIMIT = 7
+OUTPUT_FILE = "g6_research_data_cleaned.xlsx"
 LOG_FILE = "scraper_log.txt"
 
 # --- DEBUG ----
@@ -59,9 +59,19 @@ G5_SCHOOLS = {
 
 ALL_D1_SCHOOLS = P4_SCHOOLS | G5_SCHOOLS
 
+EDGE_CASE_SCHOOLS = {"Florida A&M", "Alabama A&M", "Alabama State", "Cal Poly", "Northern Colorado", 
+                     "Illinois State", "Eastern Illinois", "Western Illinois", "Indiana State", "Northern Iowa",
+                     "Colorado School of Mines", "Colorado Mesa", "Indiana State", "IUP", "Northern Iowa", "Michigan Tech",
+                     "Northern Michigan", "Minnesota State", "Minnesota Duluth", "Mississippi Valley State", "North Carolina A&T",
+                     "North Carolina Central", "Western Carolina", "South Carolina State", "Ohio Dominican", "South Carolina State",
+                     "Texas Southern", "Texas A&M-Commerce", "West Texas A&M", "Texas A&M-Kingsville", "Southern Utah", "Utah Tech",
+                     "Virginia State", "Virginia Union", "Eastern Washington", "Central Washington"
+                     }
+
 D1_MAPPING = {s.lower(): s for s in ALL_D1_SCHOOLS}
 SORTED_LOWER_D1_SCHOOLS = sorted(D1_MAPPING.keys(), key=len, reverse=True)
 
+EDGE_CASE_LOWER = {s.lower() for s in EDGE_CASE_SCHOOLS}
 
 def get_team_from_string(text):
     text = text.lower().strip()
@@ -380,6 +390,9 @@ class TwoFourSevenScraper:
                                 parts = prefix.split()
                                 for i in range(len(parts), 0, -1):
                                     candidate = " ".join(parts[:i])
+
+                                    # if candidate in EDGE_CASE_LOWER:
+                                    #     break
                                     if candidate in D1_MAPPING:
                                         team_name = D1_MAPPING[candidate]
                                         break
