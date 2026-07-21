@@ -4,6 +4,7 @@ import os
 import re
 import time
 from datetime import datetime
+import random
 
 import aiohttp
 import pandas as pd
@@ -14,7 +15,7 @@ from tqdm.asyncio import tqdm_asyncio
 # --- CONFIGURATION ---
 START_YEAR = 2017
 END_YEAR = 2027
-CONCURRENT_LIMIT = 7
+CONCURRENT_LIMIT = 1
 OUTPUT_FILE = "g6_research_data_cleaned.xlsx"
 LOG_FILE = "scraper_log.txt"
 
@@ -267,7 +268,7 @@ class TwoFourSevenScraper:
     """
     def __init__(self, cookies, user_agent):
         self.cookies = cookies
-        self.headers = {"User-Agent": user_agent, "Accept": "application/json"}
+        self.headers = {"User-Agent": user_agent, "Accept": "text/html, application/json,application/xml;q=0.9,*/*;q=0.8"}
 
     async def fetch_json_page(self, session, year, page, retries=3):
         """
@@ -334,6 +335,10 @@ class TwoFourSevenScraper:
                         break
 
                     html_content = await resp.text()
+
+
+                    
+
 
                     # Find all Date: Event headers directly in the HTML
                     matches = list(date_header_pat.finditer(html_content))
@@ -555,6 +560,7 @@ async def process_batch_timelines(scraper, semaphore, session, registry):
         # Bounded task handling matching the architecture rules
         async def bounded_process(p):
             async with semaphore:
+                await asyncio.sleep(random.uniform(1.0,2.5))
                 return await scraper.process_historical_profile(session, p)
         tasks.append(bounded_process(player))
         if MAX_PLAYER_PROCESS != -1 and len(tasks) == MAX_PLAYER_PROCESS:
@@ -577,7 +583,8 @@ async def process_batch_timelines(scraper, semaphore, session, registry):
 async def main():
     # Fetch structural access tokens using the automated driver sequence
     cookies, user_agent = get_selenium_cookies(
-        "https://247sports.com/season/2022-football/recruits/"
+        "https://247sports.com/player/antwaun-ayers-91025/"
+        #"https://247sports.com/season/2022-football/recruits/"
     )
 
     semaphore = asyncio.Semaphore(CONCURRENT_LIMIT)
